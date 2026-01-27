@@ -1,11 +1,11 @@
-# 🦞 Clawdbot — Personal AI Assistant
+# 🦾 bb3 — AI assistant for everyone (powered by Clawdbot)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/clawdbot/clawdbot/main/docs/whatsapp-clawd.jpg" alt="Clawdbot" width="400">
+  <img src="https://raw.githubusercontent.com/clawdbot/clawdbot/main/docs/whatsapp-clawd.jpg" alt="bb3" width="400">
 </p>
 
 <p align="center">
-  <strong>EXFOLIATE! EXFOLIATE!</strong>
+  <strong>Ваш личный Джарвис — без DevOps и VPS</strong>
 </p>
 
 <p align="center">
@@ -15,6 +15,14 @@
   <a href="https://discord.gg/clawd"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
+
+**bb3** is a next‑generation AI assistant built on top of the open‑source project **Clawdbot** ([moltbot/moltbot](https://github.com/moltbot/moltbot)).
+
+The original Clawdbot was designed for people who want “their own Jarvis”: engineers, product folks, founders, and geeks who are willing to spin up an assistant on Linux/macOS/VPS themselves (or via a contractor) and who value full control and automation.
+
+**The goal of bb3** is to make the same power available *instantly to everyone* — without needing to understand servers, Docker, or low‑level configuration. We take Clawdbot’s battle‑tested stack and add a simplified onboarding flow, managed infrastructure, and a polished user experience so you can just use your assistant.
+
+Under the hood, bb3 still runs on the same Clawdbot gateway/agent engine — with all the channels and capabilities described below. This README continues to document the core Clawdbot platform that bb3 is built on.
 
 **Clawdbot** is a *personal AI assistant* you run on your own devices.
 It answers you on the channels you already use (WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Microsoft Teams, WebChat), plus extension channels like BlueBubbles, Matrix, Zalo, and Zalo Personal. It can speak and listen on macOS/iOS/Android, and can render a live Canvas you control. The Gateway is just the control plane — the product is the assistant.
