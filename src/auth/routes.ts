@@ -69,6 +69,29 @@ router.post("/register", async (req, res) => {
 });
 
 // ============================================================================
+// USER CHECK
+// ============================================================================
+
+/**
+ * Check if user exists by email
+ */
+router.post("/check-user", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      res.status(400).json({ error: "Email is required" });
+      return;
+    }
+
+    const exists = await authService.userExists(email);
+    res.json({ exists });
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// ============================================================================
 // LOGIN
 // ============================================================================
 

@@ -795,4 +795,15 @@ export class AuthService {
     // TODO: Implement 2FA pending session
     throw new Error("2FA not yet implemented");
   }
+
+  /**
+   * Check if a user exists by email
+   */
+  async userExists(email: string): Promise<boolean> {
+    const result = await db.query<User>(
+      "SELECT id FROM users WHERE email = $1 AND deleted_at IS NULL",
+      [email.toLowerCase()],
+    );
+    return result.rows.length > 0;
+  }
 }
