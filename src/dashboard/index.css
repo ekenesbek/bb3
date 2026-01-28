@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Claude-style dark theme - exact match */
+    --background: #191919;
+    --foreground: #e8e6e3;
+
+    --card: #2b2b2b;
+    --card-foreground: #e8e6e3;
+
+    --popover: #2b2b2b;
+    --popover-foreground: #e8e6e3;
+
+    --primary: #f4ede4;
+    --primary-foreground: #191919;
+
+    --secondary: #3a3a3a;
+    --secondary-foreground: #e8e6e3;
+
+    --muted: #4a4a4a;
+    --muted-foreground: #9b9692;
+
+    --accent: #cc7a3e;
+    --accent-foreground: #ffffff;
+
+    --destructive: #ef4444;
+    --destructive-foreground: #fafafa;
+
+    --border: #3a3a3a;
+    --input: #3a3a3a;
+    --ring: #cc7a3e;
+    --radius: 0.5rem;
+  }
+
+  /* Optional light mode (toggle by adding .light on <html>) */
+  .light {
+    --background: #fafafa;
+    --foreground: #3f3f46;
+
+    --card: #ffffff;
+    --card-foreground: #18181b;
+
+    --popover: #ffffff;
+    --popover-foreground: #18181b;
+
+    --primary: #dc2626;
+    --primary-foreground: #ffffff;
+
+    --secondary: #f4f4f5;
+    --secondary-foreground: #3f3f46;
+
+    --muted: #f0f0f0;
+    --muted-foreground: #71717a;
+
+    --accent: #dc2626;
+    --accent-foreground: #ffffff;
+
+    --destructive: #dc2626;
+    --destructive-foreground: #fafafa;
+
+    --border: #e4e4e7;
+    --input: #e4e4e7;
+    --ring: #dc2626;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

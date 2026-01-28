@@ -1,6 +1,7 @@
 packages:
   - .
   - ui
+  - src/dashboard
   - extensions/*
 
 onlyBuiltDependencies:

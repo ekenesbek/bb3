@@ -24,6 +24,28 @@ The original Clawdbot was designed for people who want “their own Jarvis”: e
 
 Under the hood, bb3 still runs on the same Clawdbot gateway/agent engine — with all the channels and capabilities described below. This README continues to document the core Clawdbot platform that bb3 is built on.
 
+## 🌐 SaaS Platform (Coming Soon)
+
+We're building a **SaaS version** of Clawdbot to make it accessible to everyone — no CLI, no setup, just sign up and go.
+
+**Three deployment modes:**
+- ☁️ **Cloud**: Hosted agents, zero setup
+- 💻 **Local**: Full control on your machine (current CLI experience)
+- 🔀 **Hybrid**: Best of both — cloud convenience + local power
+
+**Key features:**
+- Web dashboard for easy management
+- Mobile apps (iOS & Android)
+- Multi-channel support (Telegram, WhatsApp, Slack, Discord, etc.)
+- User-friendly onboarding (< 5 minutes)
+- **Power users**: CLI remains fully supported + import existing configs
+
+📚 **SaaS Documentation:** [docs/saas/](docs/saas/) | [Quick Reference](docs/saas/QUICK_REFERENCE.md) | [Roadmap](docs/saas/SAAS_ROADMAP.md)
+
+**Status:** Phase 1 (Auth) ✅ Complete | Phase 2 (Core Services) 🚧 In Progress
+
+---
+
 **Clawdbot** is a *personal AI assistant* you run on your own devices.
 It answers you on the channels you already use (WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, Microsoft Teams, WebChat), plus extension channels like BlueBubbles, Matrix, Zalo, and Zalo Personal. It can speak and listen on macOS/iOS/Android, and can render a live Canvas you control. The Gateway is just the control plane — the product is the assistant.
 
