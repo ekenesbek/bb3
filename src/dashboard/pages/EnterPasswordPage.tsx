@@ -58,7 +58,7 @@ export function EnterPasswordPage() {
             {/* Email Display */}
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground">Email</label>
-              <div className="h-12 bg-secondary/30 border border-border rounded-lg px-4 flex items-center text-foreground">
+              <div className="h-12 bg-background border border-border rounded-lg px-4 flex items-center text-foreground">
                 {email}
               </div>
             </div>
@@ -81,7 +81,7 @@ export function EnterPasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
                 required
-                className="h-12 bg-secondary/30 border-border text-base placeholder:text-muted-foreground"
+                className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
               />
 
               <div className="flex justify-end">

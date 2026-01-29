@@ -203,7 +203,7 @@ export function AuthPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
                     required
-                    className="h-12 bg-secondary/30 border-border text-base text-foreground placeholder:text-foreground/40"
+                    className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
                   />
 
                   <Button
@@ -239,7 +239,7 @@ export function AuthPage() {
                 {/* Email Display */}
                 <div className="space-y-2">
                   <label className="text-sm text-muted-foreground">Email</label>
-                  <div className="h-12 bg-secondary/30 border border-border rounded-lg px-4 flex items-center justify-between text-foreground">
+                  <div className="h-12 bg-background border border-border rounded-lg px-4 flex items-center justify-between text-foreground">
                     <span>{email}</span>
                     <button
                       type="button"
@@ -271,7 +271,7 @@ export function AuthPage() {
                     disabled={isLoading}
                     required
                     minLength={step === "signup" ? 8 : undefined}
-                    className="h-12 bg-secondary/30 border-border text-base text-foreground placeholder:text-foreground/40"
+                    className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
                     autoFocus
                   />
 

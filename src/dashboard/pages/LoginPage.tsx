@@ -124,7 +124,7 @@ export function LoginPage() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 disabled={isLoading}
                 required
-                className="h-12 bg-secondary/30 border-border text-base placeholder:text-muted-foreground"
+                className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
               />
 
               <Button
