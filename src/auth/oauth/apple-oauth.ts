@@ -46,7 +46,7 @@ export class AppleOAuth {
       teamId: config?.teamId || process.env.APPLE_TEAM_ID || "",
       keyId: config?.keyId || process.env.APPLE_KEY_ID || "",
       privateKey: config?.privateKey || process.env.APPLE_PRIVATE_KEY || "",
-      redirectUri: config?.redirectUri || process.env.APPLE_REDIRECT_URI || "",
+      redirectUri: config?.redirectUri ?? process.env.APPLE_REDIRECT_URI ?? "",
     };
 
     if (!this.config.clientId || !this.config.teamId || !this.config.keyId) {
@@ -96,7 +96,7 @@ export class AppleOAuth {
 
     const params = new URLSearchParams({
       client_id: this.config.clientId,
-      redirect_uri: this.config.redirectUri,
+      redirect_uri: this.config.redirectUri ?? "",
       response_type: "code id_token",
       response_mode: responseMode,
       scope: scope.join(" "),
@@ -169,7 +169,7 @@ export class AppleOAuth {
         client_secret: clientSecret,
         code,
         grant_type: "authorization_code",
-        redirect_uri: this.config.redirectUri,
+        redirect_uri: this.config.redirectUri ?? "",
       }),
     });
 

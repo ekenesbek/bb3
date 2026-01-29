@@ -59,8 +59,8 @@ export class GoogleOAuth {
         picture: payload.picture,
         email_verified: payload.email_verified,
       },
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
+      accessToken: tokens.access_token ?? undefined,
+      refreshToken: tokens.refresh_token ?? undefined,
       tokenExpiresAt: tokens.expiry_date ? new Date(tokens.expiry_date) : undefined,
     });
   }
