@@ -267,7 +267,7 @@ enum CommandResolver {
         }
     }
 
-    // Existing callers still refer to clawdbotCommand; keep it as node alias.
+    /// Existing callers still refer to clawdbotCommand; keep it as node alias.
     static func clawdbotCommand(
         subcommand: String,
         extraArgs: [String] = [],

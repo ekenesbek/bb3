@@ -174,7 +174,9 @@ final class CanvasWindowController: NSWindowController, WKNavigationDelegate, NS
     }
 
     @available(*, unavailable)
-    required init?(coder: NSCoder) { fatalError("init(coder:) is not supported") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is not supported")
+    }
 
     @MainActor deinit {
         self.webView.configuration.userContentController

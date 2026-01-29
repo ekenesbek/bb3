@@ -76,7 +76,9 @@ private struct ExecHostResponse: Codable {
 enum ExecApprovalsSocketClient {
     private struct TimeoutError: LocalizedError {
         var message: String
-        var errorDescription: String? { self.message }
+        var errorDescription: String? {
+            self.message
+        }
     }
 
     static func requestDecision(

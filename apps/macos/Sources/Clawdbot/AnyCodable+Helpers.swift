@@ -7,12 +7,29 @@ typealias AnyCodable = ClawdbotKit.AnyCodable
 typealias InstanceIdentity = ClawdbotKit.InstanceIdentity
 
 extension AnyCodable {
-    var stringValue: String? { self.value as? String }
-    var boolValue: Bool? { self.value as? Bool }
-    var intValue: Int? { self.value as? Int }
-    var doubleValue: Double? { self.value as? Double }
-    var dictionaryValue: [String: AnyCodable]? { self.value as? [String: AnyCodable] }
-    var arrayValue: [AnyCodable]? { self.value as? [AnyCodable] }
+    var stringValue: String? {
+        self.value as? String
+    }
+
+    var boolValue: Bool? {
+        self.value as? Bool
+    }
+
+    var intValue: Int? {
+        self.value as? Int
+    }
+
+    var doubleValue: Double? {
+        self.value as? Double
+    }
+
+    var dictionaryValue: [String: AnyCodable]? {
+        self.value as? [String: AnyCodable]
+    }
+
+    var arrayValue: [AnyCodable]? {
+        self.value as? [AnyCodable]
+    }
 
     var foundationValue: Any {
         switch self.value {
@@ -27,12 +44,29 @@ extension AnyCodable {
 }
 
 extension ClawdbotProtocol.AnyCodable {
-    var stringValue: String? { self.value as? String }
-    var boolValue: Bool? { self.value as? Bool }
-    var intValue: Int? { self.value as? Int }
-    var doubleValue: Double? { self.value as? Double }
-    var dictionaryValue: [String: ClawdbotProtocol.AnyCodable]? { self.value as? [String: ClawdbotProtocol.AnyCodable] }
-    var arrayValue: [ClawdbotProtocol.AnyCodable]? { self.value as? [ClawdbotProtocol.AnyCodable] }
+    var stringValue: String? {
+        self.value as? String
+    }
+
+    var boolValue: Bool? {
+        self.value as? Bool
+    }
+
+    var intValue: Int? {
+        self.value as? Int
+    }
+
+    var doubleValue: Double? {
+        self.value as? Double
+    }
+
+    var dictionaryValue: [String: ClawdbotProtocol.AnyCodable]? {
+        self.value as? [String: ClawdbotProtocol.AnyCodable]
+    }
+
+    var arrayValue: [ClawdbotProtocol.AnyCodable]? {
+        self.value as? [ClawdbotProtocol.AnyCodable]
+    }
 
     var foundationValue: Any {
         switch self.value {
