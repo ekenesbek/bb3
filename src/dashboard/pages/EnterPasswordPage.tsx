@@ -44,7 +44,7 @@ export function EnterPasswordPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 mb-6 flex items-center justify-center bg-white rounded-full p-1">
+          <div className="w-16 h-16 mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-normal tracking-tight text-foreground text-center">

@@ -73,7 +73,7 @@ export function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo and Heading */}
         <div className="flex flex-col items-center mb-12">
-          <div className="w-24 h-24 mb-6 flex items-center justify-center bg-white rounded-full p-2">
+          <div className="w-24 h-24 mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
           <h1

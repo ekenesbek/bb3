@@ -125,7 +125,7 @@ export function AuthPage() {
       <div className="w-full max-w-md">
         {/* Logo and Heading */}
         <div className="flex flex-col items-center mb-8 md:mb-12">
-          <div className="w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 flex items-center justify-center bg-white rounded-full p-1 md:p-2">
+          <div className="w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
 

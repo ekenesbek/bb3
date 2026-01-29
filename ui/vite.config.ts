@@ -30,6 +30,9 @@ export default defineConfig(({ command }) => {
       host: true,
       port: 5173,
       strictPort: true,
+      fs: {
+        allow: [path.resolve(here, "..")],
+      },
     },
   };
 });

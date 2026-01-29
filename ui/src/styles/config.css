@@ -161,12 +161,26 @@
 }
 
 :root[data-theme="light"] .config-nav__item:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: #2b2b2b;
+  color: #e8e6e3;
 }
 
 .config-nav__item.active {
   background: var(--accent-subtle);
   color: var(--accent);
+}
+
+:root[data-theme="light"] .config-nav__item {
+  color: #9b9692;
+}
+
+:root[data-theme="light"] .config-nav__item.active {
+  background: #2b2b2b;
+  color: #f4ede4;
+}
+
+:root[data-theme="light"] .config-nav__item.active .config-nav__icon {
+  color: #cc7a3e;
 }
 
 .config-nav__icon {

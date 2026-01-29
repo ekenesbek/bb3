@@ -1,58 +1,58 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-  /* Background - Warmer dark with depth */
-  --bg: #12141a;
-  --bg-accent: #14161d;
-  --bg-elevated: #1a1d25;
-  --bg-hover: #262a35;
-  --bg-muted: #262a35;
+  /* Background - match dashboard palette */
+  --bg: #191919;
+  --bg-accent: #1f1f1f;
+  --bg-elevated: #2b2b2b;
+  --bg-hover: #3a3a3a;
+  --bg-muted: #3a3a3a;
 
-  /* Card / Surface - More contrast between levels */
-  --card: #181b22;
-  --card-foreground: #f4f4f5;
-  --card-highlight: rgba(255, 255, 255, 0.05);
-  --popover: #181b22;
-  --popover-foreground: #f4f4f5;
+  /* Card / Surface */
+  --card: #2b2b2b;
+  --card-foreground: #e8e6e3;
+  --card-highlight: rgba(255, 255, 255, 0.04);
+  --popover: #2b2b2b;
+  --popover-foreground: #e8e6e3;
 
   /* Panel */
-  --panel: #12141a;
-  --panel-strong: #1a1d25;
-  --panel-hover: #262a35;
-  --chrome: rgba(18, 20, 26, 0.95);
-  --chrome-strong: rgba(18, 20, 26, 0.98);
+  --panel: #191919;
+  --panel-strong: #2b2b2b;
+  --panel-hover: #3a3a3a;
+  --chrome: rgba(25, 25, 25, 0.95);
+  --chrome-strong: rgba(25, 25, 25, 0.98);
 
-  /* Text - Slightly warmer */
-  --text: #e4e4e7;
-  --text-strong: #fafafa;
-  --chat-text: #e4e4e7;
-  --muted: #71717a;
-  --muted-strong: #52525b;
-  --muted-foreground: #71717a;
+  /* Text */
+  --text: #e8e6e3;
+  --text-strong: #f4ede4;
+  --chat-text: #e8e6e3;
+  --muted: #9b9692;
+  --muted-strong: #7a7672;
+  --muted-foreground: #9b9692;
 
-  /* Border - Subtle but defined */
-  --border: #27272a;
-  --border-strong: #3f3f46;
-  --border-hover: #52525b;
-  --input: #27272a;
-  --ring: #ff5c5c;
+  /* Border */
+  --border: #3a3a3a;
+  --border-strong: #4a4a4a;
+  --border-hover: #4a4a4a;
+  --input: #3a3a3a;
+  --ring: #cc7a3e;
 
-  /* Accent - Punchy signature red */
-  --accent: #ff5c5c;
-  --accent-hover: #ff7070;
-  --accent-muted: #ff5c5c;
-  --accent-subtle: rgba(255, 92, 92, 0.15);
-  --accent-foreground: #fafafa;
-  --accent-glow: rgba(255, 92, 92, 0.25);
-  --primary: #ff5c5c;
-  --primary-foreground: #ffffff;
+  /* Accent */
+  --accent: #cc7a3e;
+  --accent-hover: #d48a52;
+  --accent-muted: #cc7a3e;
+  --accent-subtle: rgba(204, 122, 62, 0.15);
+  --accent-foreground: #ffffff;
+  --accent-glow: rgba(204, 122, 62, 0.25);
+  --primary: #f4ede4;
+  --primary-foreground: #191919;
 
-  /* Secondary - Teal accent for variety */
-  --secondary: #1e2028;
-  --secondary-foreground: #f4f4f5;
-  --accent-2: #14b8a6;
-  --accent-2-muted: rgba(20, 184, 166, 0.7);
-  --accent-2-subtle: rgba(20, 184, 166, 0.15);
+  /* Secondary */
+  --secondary: #3a3a3a;
+  --secondary-foreground: #e8e6e3;
+  --accent-2: #b2773f;
+  --accent-2-muted: rgba(178, 119, 63, 0.7);
+  --accent-2-subtle: rgba(178, 119, 63, 0.15);
 
   /* Semantic - More saturated */
   --ok: #22c55e;
@@ -69,7 +69,7 @@
   --info: #3b82f6;
 
   /* Focus - With glow */
-  --focus: rgba(255, 92, 92, 0.25);
+  --focus: rgba(204, 122, 62, 0.25);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring);
   --focus-glow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring), 0 0 20px var(--accent-glow);
 
@@ -92,7 +92,7 @@
   --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
   --shadow-glow: 0 0 30px var(--accent-glow);
 
-  /* Radii - Slightly larger for friendlier feel */
+  /* Radii */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -100,7 +100,7 @@
   --radius-full: 9999px;
   --radius: 8px;
 
-  /* Transitions - Snappy but smooth */
+  /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -113,12 +113,12 @@
 
 /* Light theme - Clean with subtle warmth */
 :root[data-theme="light"] {
-  --bg: #fafafa;
-  --bg-accent: #f5f5f5;
+  --bg: #faf9f5;
+  --bg-accent: #f4f4f5;
   --bg-elevated: #ffffff;
-  --bg-hover: #f0f0f0;
+  --bg-hover: #f4f4f5;
   --bg-muted: #f0f0f0;
-  --bg-content: #f5f5f5;
+  --bg-content: #f4f4f5;
 
   --card: #ffffff;
   --card-foreground: #18181b;
@@ -127,8 +127,8 @@
   --popover-foreground: #18181b;
 
   --panel: #fafafa;
-  --panel-strong: #f5f5f5;
-  --panel-hover: #ebebeb;
+  --panel-strong: #f4f4f5;
+  --panel-hover: #f0f0f0;
   --chrome: rgba(250, 250, 250, 0.95);
   --chrome-strong: rgba(250, 250, 250, 0.98);
 
@@ -155,9 +155,9 @@
 
   --secondary: #f4f4f5;
   --secondary-foreground: #3f3f46;
-  --accent-2: #0d9488;
-  --accent-2-muted: rgba(13, 148, 136, 0.75);
-  --accent-2-subtle: rgba(13, 148, 136, 0.12);
+  --accent-2: #b15f3b;
+  --accent-2-muted: rgba(177, 95, 59, 0.75);
+  --accent-2-subtle: rgba(177, 95, 59, 0.12);
 
   --ok: #16a34a;
   --ok-muted: rgba(22, 163, 74, 0.75);
