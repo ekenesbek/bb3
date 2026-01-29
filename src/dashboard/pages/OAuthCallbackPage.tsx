@@ -46,12 +46,14 @@ export function OAuthCallbackPage() {
             throw new Error(`Unknown OAuth provider: ${provider}`);
         }
 
-        localStorage.setItem("accessToken", result.tokens.accessToken);
-        localStorage.setItem("refreshToken", result.tokens.refreshToken);
+        // Save tokens and user info to localStorage
+        localStorage.setItem("cb.auth.tokens", JSON.stringify(result.tokens));
+        localStorage.setItem("cb.auth.user", JSON.stringify(result.user));
+        localStorage.setItem("cb.auth.tenant", JSON.stringify(result.tenant));
 
-        // Check if user is new (redirect to onboarding) or existing (dashboard)
-        const isNewUser = !result.user.emailVerified;
-        navigate(isNewUser ? "/onboarding" : "/dashboard");
+        // Redirect to Control UI with access token
+        const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+        window.location.assign(`${controlUiBase}/chat?token=${result.tokens.accessToken}`);
       } catch (err: any) {
         console.error("OAuth callback error:", err);
         setError(err.response?.data?.error || err.message || "Authentication failed");

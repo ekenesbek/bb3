@@ -3,6 +3,7 @@ import { html, nothing } from "lit";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway";
 import type { AppViewState } from "./app-view-state";
 import { parseAgentSessionKey } from "../../../src/routing/session-key.js";
+import bb8Icon from "../../../src/dashboard/assets/bb8.png";
 import {
   TAB_GROUPS,
   iconForTab,
@@ -129,10 +130,10 @@ export function renderApp(state: AppViewState) {
           </button>
           <div class="brand">
             <div class="brand-logo">
-              <img src="https://mintcdn.com/clawdhub/4rYvG-uuZrMK_URE/assets/pixel-lobster.svg?fit=max&auto=format&n=4rYvG-uuZrMK_URE&q=85&s=da2032e9eac3b5d9bfe7eb96ca6a8a26" alt="Clawdbot" />
+              <img src=${bb8Icon} alt="BB-8" />
             </div>
             <div class="brand-text">
-              <div class="brand-title">CLAWDBOT</div>
+              <div class="brand-title">BB3</div>
               <div class="brand-sub">Gateway Dashboard</div>
             </div>
           </div>
@@ -144,6 +145,9 @@ export function renderApp(state: AppViewState) {
             <span class="mono">${state.connected ? "OK" : "Offline"}</span>
           </div>
           ${renderThemeToggle(state)}
+          <button class="btn" @click=${() => state.handleExit()} title="Exit">
+            Exit
+          </button>
         </div>
       </header>
       <aside class="nav ${state.settings.navCollapsed ? "nav--collapsed" : ""}">

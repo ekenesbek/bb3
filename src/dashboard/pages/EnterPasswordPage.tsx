@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/Icons";
+import { authApi } from "@/lib/api/auth";
 import bb8Icon from "@/assets/bb8.png";
 
 export function EnterPasswordPage() {
@@ -21,13 +22,17 @@ export function EnterPasswordPage() {
     setError(null);
 
     try {
-      // TODO: Implement actual login API call
-      console.log("Logging in with:", { email, password });
+      // Call login API
+      const response = await authApi.login(email, password);
 
-      // Mock success - redirect to dashboard
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+      // Save tokens and user info to localStorage
+      localStorage.setItem("cb.auth.tokens", JSON.stringify(response.tokens));
+      localStorage.setItem("cb.auth.user", JSON.stringify(response.user));
+      localStorage.setItem("cb.auth.tenant", JSON.stringify(response.tenant));
+
+      // Redirect to Control UI with access token
+      const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+      window.location.assign(`${controlUiBase}/chat?token=${response.tokens.accessToken}`);
     } catch (err: any) {
       setError(err.response?.data?.error || "Invalid password. Please try again.");
       setIsLoading(false);
@@ -39,7 +44,7 @@ export function EnterPasswordPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 mb-6 flex items-center justify-center bg-white rounded-full p-1">
+          <div className="w-16 h-16 mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-normal tracking-tight text-foreground text-center">
@@ -53,7 +58,7 @@ export function EnterPasswordPage() {
             {/* Email Display */}
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground">Email</label>
-              <div className="h-12 bg-secondary/30 border border-border rounded-lg px-4 flex items-center text-foreground">
+              <div className="h-12 bg-background border border-border rounded-lg px-4 flex items-center text-foreground">
                 {email}
               </div>
             </div>
@@ -76,7 +81,7 @@ export function EnterPasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
                 required
-                className="h-12 bg-secondary/30 border-border text-base placeholder:text-muted-foreground"
+                className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
               />
 
               <div className="flex justify-end">

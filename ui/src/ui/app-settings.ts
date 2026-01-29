@@ -69,6 +69,7 @@ export function applySettingsFromUrl(host: SettingsHost) {
     const token = tokenRaw.trim();
     if (token && token !== host.settings.token) {
       applySettings(host, { ...host.settings, token });
+      setAuthCookie(token);
     }
     params.delete("token");
     shouldCleanUrl = true;
@@ -108,6 +109,32 @@ export function applySettingsFromUrl(host: SettingsHost) {
   const url = new URL(window.location.href);
   url.search = params.toString();
   window.history.replaceState({}, "", url.toString());
+}
+
+export function applySettingsFromCookie(host: SettingsHost) {
+  if (host.settings.token.trim()) return;
+  const token = readAuthCookie();
+  if (!token) return;
+  applySettings(host, { ...host.settings, token });
+}
+
+function readAuthCookie(): string {
+  const cookies = document.cookie ? document.cookie.split(";") : [];
+  for (const entry of cookies) {
+    const [key, ...rest] = entry.trim().split("=");
+    if (key === "cb_auth_token") {
+      return decodeURIComponent(rest.join("="));
+    }
+  }
+  return "";
+}
+
+function setAuthCookie(token: string) {
+  document.cookie = [
+    "cb_auth_token=" + encodeURIComponent(token),
+    "Path=/",
+    "SameSite=Lax",
+  ].join("; ");
 }
 
 export function setTab(host: SettingsHost, next: Tab) {

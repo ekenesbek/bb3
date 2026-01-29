@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -10,12 +9,31 @@ import bb8Icon from "@/assets/bb8.png";
 type AuthStep = "initial" | "login" | "signup";
 
 export function AuthPage() {
-  const navigate = useNavigate();
   const [step, setStep] = useState<AuthStep>("initial");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const logout = url.searchParams.get("logout");
+    if (logout) {
+      clearSession();
+      url.searchParams.delete("logout");
+      window.history.replaceState({}, "", url.toString());
+      return;
+    }
+    let accessToken = readStoredToken();
+    if (!accessToken) {
+      accessToken = readAuthCookie();
+    }
+    if (accessToken && isJwtActive(accessToken)) {
+      const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+      const trimmedBase = controlUiBase.endsWith("/") ? controlUiBase.slice(0, -1) : controlUiBase;
+      window.location.assign(`${trimmedBase}/chat?token=${accessToken}`);
+    }
+  }, []);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,17 +67,22 @@ export function AuthPage() {
     setError(null);
 
     try {
-      if (step === "login") {
-        const result = await authApi.login(email, password);
-        localStorage.setItem("accessToken", result.tokens.accessToken);
-        localStorage.setItem("refreshToken", result.tokens.refreshToken);
-      } else {
-        const result = await authApi.register({ email, password });
-        localStorage.setItem("accessToken", result.tokens.accessToken);
-        localStorage.setItem("refreshToken", result.tokens.refreshToken);
-      }
+      const result =
+        step === "login"
+          ? await authApi.login(email, password)
+          : await authApi.register({ email, password });
 
-      navigate("/dashboard");
+      localStorage.setItem("cb.auth.tokens", JSON.stringify(result.tokens));
+      localStorage.setItem("cb.auth.user", JSON.stringify(result.user));
+      localStorage.setItem("cb.auth.tenant", JSON.stringify(result.tenant));
+
+      localStorage.setItem("accessToken", result.tokens.accessToken);
+      localStorage.setItem("refreshToken", result.tokens.refreshToken);
+      setAuthCookie(result.tokens.accessToken);
+
+      const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+      const trimmedBase = controlUiBase.endsWith("/") ? controlUiBase.slice(0, -1) : controlUiBase;
+      window.location.assign(`${trimmedBase}/chat?token=${result.tokens.accessToken}`);
     } catch (err: any) {
       setError(
         err.response?.data?.error ||
@@ -102,7 +125,7 @@ export function AuthPage() {
       <div className="w-full max-w-md">
         {/* Logo and Heading */}
         <div className="flex flex-col items-center mb-8 md:mb-12">
-          <div className="w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 flex items-center justify-center bg-white rounded-full p-1 md:p-2">
+          <div className="w-16 h-16 md:w-20 md:h-20 mb-4 md:mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
 
@@ -180,7 +203,7 @@ export function AuthPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={isLoading}
                     required
-                    className="h-12 bg-secondary/30 border-border text-base text-foreground placeholder:text-foreground/40"
+                    className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
                   />
 
                   <Button
@@ -216,7 +239,7 @@ export function AuthPage() {
                 {/* Email Display */}
                 <div className="space-y-2">
                   <label className="text-sm text-muted-foreground">Email</label>
-                  <div className="h-12 bg-secondary/30 border border-border rounded-lg px-4 flex items-center justify-between text-foreground">
+                  <div className="h-12 bg-background border border-border rounded-lg px-4 flex items-center justify-between text-foreground">
                     <span>{email}</span>
                     <button
                       type="button"
@@ -248,7 +271,7 @@ export function AuthPage() {
                     disabled={isLoading}
                     required
                     minLength={step === "signup" ? 8 : undefined}
-                    className="h-12 bg-secondary/30 border-border text-base text-foreground placeholder:text-foreground/40"
+                    className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
                     autoFocus
                   />
 
@@ -334,4 +357,67 @@ export function AuthPage() {
       </div>
     </div>
   );
+}
+
+function clearSession() {
+  localStorage.removeItem("cb.auth.tokens");
+  localStorage.removeItem("cb.auth.user");
+  localStorage.removeItem("cb.auth.tenant");
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  document.cookie = "cb_auth_token=; Path=/; Max-Age=0; SameSite=Lax";
+}
+
+function readStoredToken(): string {
+  const raw = localStorage.getItem("cb.auth.tokens");
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as { accessToken?: string };
+      if (typeof parsed.accessToken === "string") return parsed.accessToken;
+    } catch {
+      // ignore malformed storage
+    }
+  }
+  return localStorage.getItem("accessToken") || "";
+}
+
+function readAuthCookie(): string {
+  const cookies = document.cookie ? document.cookie.split(";") : [];
+  for (const entry of cookies) {
+    const [key, ...rest] = entry.trim().split("=");
+    if (key === "cb_auth_token") {
+      return decodeURIComponent(rest.join("="));
+    }
+  }
+  return "";
+}
+
+function setAuthCookie(token: string) {
+  document.cookie = ["cb_auth_token=" + encodeURIComponent(token), "Path=/", "SameSite=Lax"].join(
+    "; ",
+  );
+}
+
+function isJwtActive(token: string): boolean {
+  const payload = decodeJwtPayload(token);
+  if (!payload) return true;
+  const exp = typeof payload.exp === "number" ? payload.exp : null;
+  if (!exp) return true;
+  const now = Math.floor(Date.now() / 1000);
+  return now < exp - 30;
+}
+
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  const payload = parts[1];
+  const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), "=");
+  try {
+    const json = atob(padded);
+    const parsed = JSON.parse(json) as Record<string, unknown>;
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
 }

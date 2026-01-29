@@ -497,17 +497,30 @@
 }
 
 :root[data-theme="light"] .btn {
-  background: var(--bg);
-  border-color: var(--input);
+  background: #2b2b2b;
+  border-color: #3a3a3a;
+  color: #e8e6e3;
 }
 
 :root[data-theme="light"] .btn:hover {
-  background: var(--bg-hover);
+  background: #3a3a3a;
+  border-color: #4a4a4a;
+}
+
+:root[data-theme="light"] .btn:active {
+  background: #3a3a3a;
 }
 
 :root[data-theme="light"] .btn.primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #cc7a3e;
+  border-color: #cc7a3e;
+  color: #191919;
+}
+
+:root[data-theme="light"] .btn.primary:hover {
+  background: #d48a52;
+  border-color: #d48a52;
+  box-shadow: var(--shadow-md), 0 0 20px rgba(204, 122, 62, 0.25);
 }
 
 /* ===========================================

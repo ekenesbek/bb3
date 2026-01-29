@@ -1,7 +1,7 @@
 /**
  * Rate limiting for authentication endpoints
  */
-import Redis from "ioredis";
+import { Redis } from "ioredis";
 
 export class AuthRateLimiter {
   private redis: Redis | null = null;

@@ -73,7 +73,7 @@ export function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo and Heading */}
         <div className="flex flex-col items-center mb-12">
-          <div className="w-24 h-24 mb-6 flex items-center justify-center bg-white rounded-full p-2">
+          <div className="w-24 h-24 mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
           <h1
@@ -124,7 +124,7 @@ export function LoginPage() {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 disabled={isLoading}
                 required
-                className="h-12 bg-secondary/30 border-border text-base placeholder:text-muted-foreground"
+                className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
               />
 
               <Button

@@ -58,6 +58,7 @@ import {
   setTheme as setThemeInternal,
   onPopState as onPopStateInternal,
 } from "./app-settings";
+import { redirectToDashboard } from "./app-lifecycle";
 import {
   handleAbortChat as handleAbortChatInternal,
   handleSendChat as handleSendChatInternal,
@@ -336,6 +337,23 @@ export class ClawdbotApp extends LitElement {
       this as unknown as Parameters<typeof applySettingsInternal>[0],
       next,
     );
+  }
+
+  handleExit() {
+    this.client?.stop();
+    this.connected = false;
+    this.lastError = null;
+    this.password = "";
+    this.applySettings({ ...this.settings, token: "" });
+    document.cookie = "cb_auth_token=; Path=/; Max-Age=0; SameSite=Lax";
+    localStorage.removeItem("clawdbot.device.auth.v1");
+    localStorage.removeItem("cb.auth.tokens");
+    localStorage.removeItem("cb.auth.user");
+    localStorage.removeItem("cb.auth.tenant");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    redirectToDashboard({ logout: true });
   }
 
   setTab(next: Tab) {

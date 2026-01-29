@@ -2,6 +2,7 @@ import type { Tab } from "./navigation";
 import { connectGateway } from "./app-gateway";
 import {
   applySettingsFromUrl,
+  applySettingsFromCookie,
   attachThemeListener,
   detachThemeListener,
   inferBasePath,
@@ -49,6 +50,13 @@ export function handleConnected(host: LifecycleHost) {
   applySettingsFromUrl(
     host as unknown as Parameters<typeof applySettingsFromUrl>[0],
   );
+  applySettingsFromCookie(
+    host as unknown as Parameters<typeof applySettingsFromCookie>[0],
+  );
+  if (!hasSession(host)) {
+    redirectToDashboard();
+    return;
+  }
   connectGateway(host as unknown as Parameters<typeof connectGateway>[0]);
   startNodesPolling(host as unknown as Parameters<typeof startNodesPolling>[0]);
   if (host.tab === "logs") {
@@ -57,6 +65,33 @@ export function handleConnected(host: LifecycleHost) {
   if (host.tab === "debug") {
     startDebugPolling(host as unknown as Parameters<typeof startDebugPolling>[0]);
   }
+}
+
+function hasSession(host: LifecycleHost): boolean {
+  const settings = host as unknown as { settings?: { token?: string } };
+  const password = host as unknown as { password?: string };
+  const token = settings.settings?.token?.trim() ?? "";
+  const pass = password.password?.trim() ?? "";
+  return Boolean(token || pass);
+}
+
+export function redirectToDashboard(opts?: { logout?: boolean }) {
+  const logout = opts?.logout === true;
+  const referrer = document.referrer;
+  if (referrer) {
+    try {
+      const refUrl = new URL(referrer);
+      const suffix = logout ? "?logout=1" : "";
+      window.location.assign(`${refUrl.origin}/login${suffix}`);
+      return;
+    } catch {
+      // ignore invalid referrer
+    }
+  }
+  const host = window.location.hostname || "127.0.0.1";
+  const origin = `${window.location.protocol}//${host}:5173`;
+  const suffix = logout ? "?logout=1" : "";
+  window.location.assign(`${origin}/login${suffix}`);
 }
 
 export function handleFirstUpdated(host: LifecycleHost) {

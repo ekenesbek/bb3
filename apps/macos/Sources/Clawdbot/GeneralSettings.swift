@@ -16,8 +16,13 @@ struct GeneralSettings: View {
     @State private var remoteStatus: RemoteStatus = .idle
     @State private var showRemoteAdvanced = false
     private let isPreview = ProcessInfo.processInfo.isPreview
-    private var isNixMode: Bool { ProcessInfo.processInfo.isNixMode }
-    private var remoteLabelWidth: CGFloat { 88 }
+    private var isNixMode: Bool {
+        ProcessInfo.processInfo.isNixMode
+    }
+
+    private var remoteLabelWidth: CGFloat {
+        88
+    }
 
     var body: some View {
         ScrollView(.vertical) {
