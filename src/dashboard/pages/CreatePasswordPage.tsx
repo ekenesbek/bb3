@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Icons } from "@/components/Icons";
+import { authApi } from "@/lib/api/auth";
 import bb8Icon from "@/assets/bb8.png";
 
 export function CreatePasswordPage() {
@@ -27,13 +28,17 @@ export function CreatePasswordPage() {
     setError(null);
 
     try {
-      // TODO: Implement actual signup API call
-      console.log("Creating account with:", { email, password });
+      // Call register API
+      const response = await authApi.register({ email, password });
 
-      // Mock success - redirect to dashboard
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+      // Save tokens and user info to localStorage
+      localStorage.setItem("cb.auth.tokens", JSON.stringify(response.tokens));
+      localStorage.setItem("cb.auth.user", JSON.stringify(response.user));
+      localStorage.setItem("cb.auth.tenant", JSON.stringify(response.tenant));
+
+      // Redirect to Control UI with access token
+      const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+      window.location.assign(`${controlUiBase}/chat?token=${response.tokens.accessToken}`);
     } catch (err: any) {
       setError(err.response?.data?.error || "Failed to create account. Please try again.");
       setIsLoading(false);

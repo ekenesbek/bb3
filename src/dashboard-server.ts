@@ -24,10 +24,21 @@ db.initialize({
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const dashboardOrigins = process.env.DASHBOARD_URL
+  ? process.env.DASHBOARD_URL.split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean)
+  : [];
+
 // Middleware
 app.use(
   cors({
-    origin: process.env.DASHBOARD_URL || "http://localhost:5174",
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (dashboardOrigins.length === 0) return callback(null, true);
+      if (dashboardOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
   }),
 );
@@ -50,7 +61,11 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 
 app.listen(PORT, () => {
   console.log(`Dashboard API server running on http://localhost:${PORT}`);
-  console.log(`Dashboard URL: ${process.env.DASHBOARD_URL || "http://localhost:5174"}`);
+  if (dashboardOrigins.length > 0) {
+    console.log(`Dashboard URL(s): ${dashboardOrigins.join(", ")}`);
+  } else {
+    console.log("Dashboard URL(s): allow all origins (DASHBOARD_URL not set)");
+  }
 });
 
 export default app;
