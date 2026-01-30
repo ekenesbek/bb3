@@ -179,6 +179,19 @@ export const authApi = {
     const response = await api.post("/auth/refresh", { refreshToken });
     return response.data;
   },
+
+  // Gateway Token Exchange
+  exchangeForGatewayToken: async (accessToken: string): Promise<{
+    gatewayToken: string;
+    expiresAt: string;
+  }> => {
+    const response = await api.post("/auth/gateway-token", null, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  },
 };
 
 export default api;

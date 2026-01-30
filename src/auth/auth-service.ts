@@ -415,7 +415,7 @@ export class AuthService {
   private async loginExistingOAuthUser(
     userId: string,
     provider: string,
-    providerUserId: string,
+    _providerUserId: string,
   ): Promise<{
     user: User;
     tenant: Tenant;
@@ -791,7 +791,7 @@ export class AuthService {
     return "web";
   }
 
-  private async createPending2FASession(user: User): Promise<any> {
+  private async createPending2FASession(_user: User): Promise<any> {
     // TODO: Implement 2FA pending session
     throw new Error("2FA not yet implemented");
   }
@@ -805,5 +805,80 @@ export class AuthService {
       [email.toLowerCase()],
     );
     return result.rows.length > 0;
+  }
+
+  /**
+   * Exchange JWT access token for Gateway token
+   * This creates a short-lived token specifically for Gateway WebSocket connection
+   */
+  async exchangeForGatewayToken(accessToken: string): Promise<{
+    gatewayToken: string;
+    expiresAt: Date;
+  }> {
+    // Validate the access token
+    const payload = this.tokenService.verifyAccessToken(accessToken);
+    if (!payload) {
+      throw new Error("Invalid access token");
+    }
+
+    // Generate a random gateway token (32 bytes = 64 hex chars)
+    const gatewayToken = crypto.randomBytes(32).toString("hex");
+
+    // Gateway tokens are short-lived (1 hour)
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    // Store the gateway token in database
+    await db.query(
+      `INSERT INTO gateway_tokens (token, user_id, tenant_id, expires_at, created_at)
+       VALUES ($1, $2, $3, $4, NOW())`,
+      [gatewayToken, payload.sub, payload.tenant_id, expiresAt],
+    );
+
+    // Audit log
+    await this.auditLogger.log({
+      tenantId: payload.tenant_id,
+      userId: payload.sub,
+      action: "gateway_token.created",
+      resourceType: "gateway_token",
+      resourceId: gatewayToken.substring(0, 8),
+      status: "success",
+      metadata: { expiresAt },
+    });
+
+    return { gatewayToken, expiresAt };
+  }
+
+  /**
+   * Validate a gateway token
+   * Returns user info if token is valid and not expired
+   */
+  async validateGatewayToken(token: string): Promise<{
+    userId: string;
+    tenantId: string;
+    email: string;
+  } | null> {
+    const result = await db.query<{
+      user_id: string;
+      tenant_id: string;
+      expires_at: Date;
+      email: string;
+    }>(
+      `SELECT gt.user_id, gt.tenant_id, gt.expires_at, u.email
+       FROM gateway_tokens gt
+       JOIN users u ON u.id = gt.user_id
+       WHERE gt.token = $1 AND gt.expires_at > NOW() AND gt.revoked_at IS NULL`,
+      [token],
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    const row = result.rows[0];
+    return {
+      userId: row.user_id,
+      tenantId: row.tenant_id,
+      email: row.email,
+    };
   }
 }

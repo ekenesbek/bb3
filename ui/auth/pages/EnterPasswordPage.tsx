@@ -7,7 +7,7 @@ import { Icons } from "@/components/Icons";
 import { authApi } from "@/lib/api/auth";
 import bb8Icon from "@/assets/bb8.png";
 
-export function CreatePasswordPage() {
+export function EnterPasswordPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || "";
@@ -18,29 +18,28 @@ export function CreatePasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
-
     setIsLoading(true);
     setError(null);
 
     try {
-      // Call register API
-      const response = await authApi.register({ email, password });
+      // Call login API
+      const response = await authApi.login(email, password);
 
       // Save tokens and user info to localStorage
       localStorage.setItem("cb.auth.tokens", JSON.stringify(response.tokens));
       localStorage.setItem("cb.auth.user", JSON.stringify(response.user));
       localStorage.setItem("cb.auth.tenant", JSON.stringify(response.tenant));
 
-      // Redirect to Control UI with access token
+      // Exchange JWT for Gateway token
+      const gatewayTokenResponse = await authApi.exchangeForGatewayToken(
+        response.tokens.accessToken,
+      );
+
+      // Redirect to Control UI with gateway token
       const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
-      window.location.assign(`${controlUiBase}/chat?token=${response.tokens.accessToken}`);
+      window.location.assign(`${controlUiBase}/chat?token=${gatewayTokenResponse.gatewayToken}`);
     } catch (err: any) {
-      setError(err.response?.data?.error || "Failed to create account. Please try again.");
+      setError(err.response?.data?.error || "Invalid password. Please try again.");
       setIsLoading(false);
     }
   };
@@ -53,12 +52,9 @@ export function CreatePasswordPage() {
           <div className="w-16 h-16 mb-6 flex items-center justify-center">
             <img src={bb8Icon} alt="BB-8" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-3xl font-normal tracking-tight text-foreground text-center mb-2">
-            Create a password
+          <h1 className="text-3xl font-normal tracking-tight text-foreground text-center">
+            Enter your password
           </h1>
-          <p className="text-sm text-muted-foreground text-center max-w-sm">
-            You'll use this password to log in to bb3 and other products
-          </p>
         </div>
 
         {/* Form Card */}
@@ -90,9 +86,17 @@ export function CreatePasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
                 required
-                minLength={8}
                 className="h-12 bg-background border-border text-base text-foreground placeholder:text-muted-foreground"
               />
+
+              <div className="flex justify-end">
+                <a
+                  href="/forgot-password"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Forgot password?
+                </a>
+              </div>
 
               <Button
                 type="submit"
@@ -102,7 +106,7 @@ export function CreatePasswordPage() {
                 {isLoading ? (
                   <>
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
+                    Logging in...
                   </>
                 ) : (
                   "Continue"
@@ -115,9 +119,9 @@ export function CreatePasswordPage() {
         {/* Footer Links */}
         <div className="mt-6 text-center space-y-3">
           <div className="text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <a href="/login" className="text-foreground hover:underline transition-colors">
-              Log in
+            Don't have an account?{" "}
+            <a href="/signup" className="text-foreground hover:underline transition-colors">
+              Sign up
             </a>
           </div>
 

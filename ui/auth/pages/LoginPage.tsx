@@ -31,11 +31,10 @@ export function LoginPage() {
     setError(null);
 
     try {
-      // TODO: Replace with actual API call to check if user exists
-      // For now, mock the check based on email
-      const userExists = Math.random() > 0.5; // Mock: random check
+      // Check if user exists
+      const { exists } = await authApi.checkUser(formData.email);
 
-      if (userExists) {
+      if (exists) {
         // User exists - go to login password page
         navigate("/login/password", { state: { email: formData.email } });
       } else {

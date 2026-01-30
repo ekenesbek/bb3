@@ -171,6 +171,33 @@ router.post("/refresh", async (req, res) => {
 });
 
 // ============================================================================
+// GATEWAY TOKEN EXCHANGE
+// ============================================================================
+
+/**
+ * Exchange JWT access token for Gateway token
+ * This creates a short-lived token for WebSocket Gateway connection
+ */
+router.post("/gateway-token", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "No access token provided" });
+    }
+
+    const accessToken = authHeader.substring(7);
+    const result = await authService.exchangeForGatewayToken(accessToken);
+
+    res.json({
+      gatewayToken: result.gatewayToken,
+      expiresAt: result.expiresAt.toISOString(),
+    });
+  } catch (error: any) {
+    res.status(401).json({ error: error.message || "Invalid token" });
+  }
+});
+
+// ============================================================================
 // OAUTH
 // ============================================================================
 
