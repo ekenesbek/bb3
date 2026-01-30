@@ -81,7 +81,7 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
       req.tenantId = user.tenant_id;
     }
     next();
-  } catch (error) {
+  } catch {
     // Ignore errors for optional auth
     next();
   }

@@ -3,6 +3,7 @@ import type { IncomingMessage } from "node:http";
 import type { GatewayAuthConfig, GatewayTailscaleMode } from "../config/config.js";
 import { readTailscaleWhoisIdentity, type TailscaleWhoisIdentity } from "../infra/tailscale.js";
 import { isTrustedProxyAddress, parseForwardedForClientIp, resolveGatewayClientIp } from "./net.js";
+import { AuthService } from "../auth/auth-service.js";
 export type ResolvedGatewayAuthMode = "token" | "password";
 
 export type ResolvedGatewayAuth = {
@@ -228,6 +229,21 @@ export async function authorizeGatewayConnect(params: {
     if (!connectAuth?.token) {
       return { ok: false, reason: "token_missing" };
     }
+
+    // Check if token is a gateway token (hex string, 64 chars)
+    if (connectAuth.token.length === 64 && /^[0-9a-f]+$/i.test(connectAuth.token)) {
+      try {
+        const authService = new AuthService();
+        const result = await authService.validateGatewayToken(connectAuth.token);
+        if (result) {
+          return { ok: true, method: "token", user: result.email };
+        }
+      } catch {
+        // Invalid gateway token, continue to check static token
+      }
+    }
+
+    // Check static gateway token (backward compatibility)
     if (!safeEqual(connectAuth.token, auth.token)) {
       return { ok: false, reason: "token_mismatch" };
     }

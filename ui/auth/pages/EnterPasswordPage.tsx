@@ -30,9 +30,14 @@ export function EnterPasswordPage() {
       localStorage.setItem("cb.auth.user", JSON.stringify(response.user));
       localStorage.setItem("cb.auth.tenant", JSON.stringify(response.tenant));
 
-      // Redirect to Control UI with access token
+      // Exchange JWT for Gateway token
+      const gatewayTokenResponse = await authApi.exchangeForGatewayToken(
+        response.tokens.accessToken,
+      );
+
+      // Redirect to Control UI with gateway token
       const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
-      window.location.assign(`${controlUiBase}/chat?token=${response.tokens.accessToken}`);
+      window.location.assign(`${controlUiBase}/chat?token=${gatewayTokenResponse.gatewayToken}`);
     } catch (err: any) {
       setError(err.response?.data?.error || "Invalid password. Please try again.");
       setIsLoading(false);

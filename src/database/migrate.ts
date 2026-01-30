@@ -29,7 +29,7 @@ export async function runMigrations(): Promise<void> {
 
 // CLI runner
 if (import.meta.url === `file://${process.argv[1]}`) {
-  (async () => {
+  void (async () => {
     try {
       // Initialize database connection
       db.initialize({

@@ -508,7 +508,38 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  src/dashboard:
+  ui:
+    dependencies:
+      '@noble/ed25519':
+        specifier: 3.0.0
+        version: 3.0.0
+      dompurify:
+        specifier: ^3.3.1
+        version: 3.3.1
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+      marked:
+        specifier: ^17.0.1
+        version: 17.0.1
+      vite:
+        specifier: 7.3.1
+        version: 7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
+    devDependencies:
+      '@vitest/browser-playwright':
+        specifier: 4.0.18
+        version: 4.0.18(playwright@1.58.0)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
+      playwright:
+        specifier: ^1.58.0
+        version: 1.58.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 4.0.18
+        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
+
+  ui/auth:
     dependencies:
       axios:
         specifier: ^1.6.2
@@ -559,37 +590,6 @@ importers:
       vite:
         specifier: ^5.0.8
         version: 5.4.21(@types/node@25.0.10)(lightningcss@1.30.2)
-
-  ui:
-    dependencies:
-      '@noble/ed25519':
-        specifier: 3.0.0
-        version: 3.0.0
-      dompurify:
-        specifier: ^3.3.1
-        version: 3.3.1
-      lit:
-        specifier: ^3.3.2
-        version: 3.3.2
-      marked:
-        specifier: ^17.0.1
-        version: 17.0.1
-      vite:
-        specifier: 7.3.1
-        version: 7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
-    devDependencies:
-      '@vitest/browser-playwright':
-        specifier: 4.0.18
-        version: 4.0.18(playwright@1.58.0)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
-      playwright:
-        specifier: ^1.58.0
-        version: 1.58.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: 4.0.18
-        version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.0.10)(@vitest/browser-playwright@4.0.18)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2)
 
 packages:
 

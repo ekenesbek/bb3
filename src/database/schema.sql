@@ -350,13 +350,35 @@ ALTER TABLE user_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_invitations ENABLE ROW LEVEL SECURITY;
 
 -- Policies for users
-CREATE POLICY IF NOT EXISTS tenant_isolation_users ON users
+DROP POLICY IF EXISTS tenant_isolation_users ON users;
+CREATE POLICY tenant_isolation_users ON users
   USING (tenant_id = current_setting('app.current_tenant_id', true)::uuid);
 
-CREATE POLICY IF NOT EXISTS tenant_isolation_sessions ON user_sessions
+DROP POLICY IF EXISTS tenant_isolation_sessions ON user_sessions;
+CREATE POLICY tenant_isolation_sessions ON user_sessions
   USING (user_id IN (
     SELECT id FROM users WHERE tenant_id = current_setting('app.current_tenant_id', true)::uuid
   ));
+
+-- ============================================================================
+-- GATEWAY TOKENS
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS gateway_tokens (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+  token VARCHAR(255) NOT NULL UNIQUE,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+
+  expires_at TIMESTAMP NOT NULL,
+  revoked_at TIMESTAMP,
+
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_gateway_tokens_token ON gateway_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_gateway_tokens_user_id ON gateway_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_gateway_tokens_expires_at ON gateway_tokens(expires_at);
 
 -- ============================================================================
 -- HELPER FUNCTIONS

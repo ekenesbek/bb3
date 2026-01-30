@@ -63,7 +63,7 @@ export class TokenService {
         return null;
       }
       return payload;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -78,7 +78,7 @@ export class TokenService {
         return null;
       }
       return payload;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -89,7 +89,7 @@ export class TokenService {
   decodeToken(token: string): AccessTokenPayload | RefreshTokenPayload | null {
     try {
       return jwt.decode(token) as AccessTokenPayload | RefreshTokenPayload;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
