@@ -1,7 +1,7 @@
 packages:
   - .
   - ui
-  - src/dashboard
+  - ui/auth
   - extensions/*
 
 onlyBuiltDependencies:

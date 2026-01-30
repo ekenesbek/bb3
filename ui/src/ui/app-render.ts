@@ -3,7 +3,7 @@ import { html, nothing } from "lit";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway";
 import type { AppViewState } from "./app-view-state";
 import { parseAgentSessionKey } from "../../../src/routing/session-key.js";
-import bb8Icon from "../../../src/dashboard/assets/bb8.png";
+import bb8Icon from "../../auth/assets/bb8.png";
 import {
   TAB_GROUPS,
   iconForTab,
