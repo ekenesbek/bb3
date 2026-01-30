@@ -185,7 +185,7 @@ export const authApi = {
     gatewayToken: string;
     expiresAt: string;
   }> => {
-    const response = await api.post("/auth/gateway-token", null, {
+    const response = await api.post("/auth/gateway-token", {}, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

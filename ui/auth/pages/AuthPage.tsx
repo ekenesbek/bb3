@@ -29,9 +29,21 @@ export function AuthPage() {
       accessToken = readAuthCookie();
     }
     if (accessToken && isJwtActive(accessToken)) {
-      const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
-      const trimmedBase = controlUiBase.endsWith("/") ? controlUiBase.slice(0, -1) : controlUiBase;
-      window.location.assign(`${trimmedBase}/chat?token=${accessToken}`);
+      // Exchange JWT for Gateway token
+      authApi
+        .exchangeForGatewayToken(accessToken)
+        .then((gatewayTokenResponse) => {
+          const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
+          const trimmedBase = controlUiBase.endsWith("/")
+            ? controlUiBase.slice(0, -1)
+            : controlUiBase;
+          window.location.assign(`${trimmedBase}/chat?token=${gatewayTokenResponse.gatewayToken}`);
+        })
+        .catch((err) => {
+          console.error("Failed to exchange JWT for Gateway token:", err);
+          // If exchange fails, clear session and stay on auth page
+          clearSession();
+        });
     }
   }, []);
 
@@ -72,17 +84,23 @@ export function AuthPage() {
           ? await authApi.login(email, password)
           : await authApi.register({ email, password });
 
+      // Save tokens and user info to localStorage
       localStorage.setItem("cb.auth.tokens", JSON.stringify(result.tokens));
       localStorage.setItem("cb.auth.user", JSON.stringify(result.user));
       localStorage.setItem("cb.auth.tenant", JSON.stringify(result.tenant));
 
       localStorage.setItem("accessToken", result.tokens.accessToken);
       localStorage.setItem("refreshToken", result.tokens.refreshToken);
-      setAuthCookie(result.tokens.accessToken);
 
+      // Exchange JWT for Gateway token
+      const gatewayTokenResponse = await authApi.exchangeForGatewayToken(
+        result.tokens.accessToken,
+      );
+
+      // Redirect to Control UI with gateway token
       const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
       const trimmedBase = controlUiBase.endsWith("/") ? controlUiBase.slice(0, -1) : controlUiBase;
-      window.location.assign(`${trimmedBase}/chat?token=${result.tokens.accessToken}`);
+      window.location.assign(`${trimmedBase}/chat?token=${gatewayTokenResponse.gatewayToken}`);
     } catch (err: any) {
       setError(
         err.response?.data?.error ||
