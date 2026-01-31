@@ -51,9 +51,14 @@ export function OAuthCallbackPage() {
         localStorage.setItem("cb.auth.user", JSON.stringify(result.user));
         localStorage.setItem("cb.auth.tenant", JSON.stringify(result.tenant));
 
-        // Redirect to Control UI with access token
+        // Exchange JWT for Gateway token
+        const gatewayTokenResponse = await authApi.exchangeForGatewayToken(
+          result.tokens.accessToken,
+        );
+
+        // Redirect to Control UI with gateway token
         const controlUiBase = import.meta.env.VITE_CONTROL_UI_BASE || "/";
-        window.location.assign(`${controlUiBase}/chat?token=${result.tokens.accessToken}`);
+        window.location.assign(`${controlUiBase}/chat?token=${gatewayTokenResponse.gatewayToken}`);
       } catch (err: any) {
         console.error("OAuth callback error:", err);
         setError(err.response?.data?.error || err.message || "Authentication failed");

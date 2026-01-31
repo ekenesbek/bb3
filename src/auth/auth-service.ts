@@ -828,11 +828,13 @@ export class AuthService {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
     // Store the gateway token in database
-    await db.query(
-      `INSERT INTO gateway_tokens (token, user_id, tenant_id, expires_at, created_at)
-       VALUES ($1, $2, $3, $4, NOW())`,
+    const gatewayInsert = await db.query<{ id: string }>(
+      `INSERT INTO gateway_tokens (token, user_id, tenant_id, expires_at)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id`,
       [gatewayToken, payload.sub, payload.tenant_id, expiresAt],
     );
+    const gatewayTokenId = gatewayInsert.rows[0]?.id;
 
     // Audit log
     await this.auditLogger.log({
@@ -840,7 +842,7 @@ export class AuthService {
       userId: payload.sub,
       action: "gateway_token.created",
       resourceType: "gateway_token",
-      resourceId: gatewayToken.substring(0, 8),
+      resourceId: gatewayTokenId,
       status: "success",
       metadata: { expiresAt },
     });

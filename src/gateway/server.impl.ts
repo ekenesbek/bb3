@@ -70,6 +70,7 @@ import { startGatewayTailscaleExposure } from "./server-tailscale.js";
 import { loadGatewayTlsRuntime } from "./server/tls.js";
 import { createWizardSessionTracker } from "./server-wizard-sessions.js";
 import { attachGatewayWsHandlers } from "./server-ws-runtime.js";
+import { db } from "../database/index.js";
 
 export { __resetModelCatalogCacheForTest } from "./server-model-catalog.js";
 
@@ -88,6 +89,35 @@ const logHooks = log.child("hooks");
 const logPlugins = log.child("plugins");
 const logWsControl = log.child("ws");
 const canvasRuntime = runtimeForLogger(logCanvas);
+
+function initGatewayDatabase(): void {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+  if (!databaseUrl) {
+    log.warn("gateway: DATABASE_URL not set; auth gateway tokens will not validate.");
+    return;
+  }
+  try {
+    const url = new URL(databaseUrl);
+    const database = url.pathname.replace(/^\//, "");
+    const user = url.username || process.env.USER;
+    if (!database) {
+      throw new Error("DATABASE_URL missing database name");
+    }
+    if (!user) {
+      throw new Error("DATABASE_URL missing user");
+    }
+    db.initialize({
+      host: url.hostname,
+      port: url.port ? Number.parseInt(url.port, 10) : 5432,
+      database,
+      user,
+      password: url.password || "",
+    });
+    log.info("gateway: database initialized.");
+  } catch (err) {
+    log.warn(`gateway: failed to initialize database for auth tokens: ${String(err)}`);
+  }
+}
 
 export type GatewayServer = {
   close: (opts?: { reason?: string; restartExpectedMs?: number | null }) => Promise<void>;
@@ -210,6 +240,7 @@ export async function startGatewayServer(
   }
 
   const cfgAtStart = loadConfig();
+  initGatewayDatabase();
   const diagnosticsEnabled = isDiagnosticsEnabled(cfgAtStart);
   if (diagnosticsEnabled) {
     startDiagnosticHeartbeat();
